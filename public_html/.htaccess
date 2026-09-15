@@ -1,0 +1,28 @@
+Options -Indexes
+DirectoryIndex index.php
+
+# Bloqueia acesso direto a arquivos internos
+<FilesMatch "^(config\.php|config\.example\.php|_page\.php|_bootstrap\.php)$">
+  Require all denied
+</FilesMatch>
+RewriteEngine On
+RewriteRule ^(templates|data)/ - [F,L]
+
+# Repassa o header Authorization ao PHP (necessário no LiteSpeed/CGI)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Rotas amigáveis (sem barra final, para os caminhos relativos funcionarem em subpasta)
+RewriteRule ^(crm|obrigado)/$ $1 [R=301,L]
+RewriteRule ^obrigado$ obrigado.php [L]
+RewriteRule ^crm$ crm.php [L]
+RewriteRule ^api/leads/?$ api/leads.php [L]
+RewriteRule ^api/leads/([a-z0-9]+)/?$ api/lead.php?id=$1 [L,QSA]
+RewriteRule ^api/stats/?$ api/stats.php [L]
+RewriteRule ^api/config/?$ api/config.php [L]
+
+# Segurança básica
+<IfModule mod_headers.c>
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

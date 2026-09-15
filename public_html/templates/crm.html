@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bravvo CRM · Funil da campanha</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f5f1ea; --panel: #ffffff; --line: #e2dbcf; --ink: #1d1916; --muted: #7d7365;
+    --brass: #a8842f; --brass-soft: #f1e6c8;
+    --ok: #2e8b57; --ok-soft: #dcefe3; --bad: #c0392b; --bad-soft: #f6dcd8; --warn: #b7791f; --warn-soft: #f7ebd0; --info: #2f6fb0; --info-soft: #dfe9f5;
+    --shadow: 0 1px 2px rgba(29,25,22,.06), 0 4px 12px rgba(29,25,22,.05);
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Work Sans", system-ui, sans-serif; font-size: 14px; line-height: 1.45; }
+  header { display: flex; align-items: center; gap: 16px; padding: 12px 20px; background: var(--ink); color: #f3ebdd; position: sticky; top: 0; z-index: 5; }
+  header .name { font-family: "Bebas Neue", Impact, sans-serif; font-size: 22px; letter-spacing: 3px; }
+  header .name small { font-family: "Work Sans", sans-serif; font-size: 11px; letter-spacing: 2px; color: #a79b8a; margin-left: 8px; }
+  header .sp { flex: 1; }
+  header input { font: inherit; padding: 7px 10px; border-radius: 4px; border: 1px solid #3a322b; background: #221d19; color: #f3ebdd; min-width: 180px; }
+  header input:focus { outline: none; border-color: #c8a24a; }
+  .sync { font-size: 11px; color: #a79b8a; white-space: nowrap; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; padding: 16px 20px 6px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; }
+  .stat span { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .stat b { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+  .board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 12px; padding: 12px 20px 24px; overflow-x: auto; min-height: 60vh; }
+  .col { background: #ece6db; border: 1px solid var(--line); border-radius: 4px; display: flex; flex-direction: column; min-height: 200px; }
+  .col.over { outline: 2px dashed var(--brass); outline-offset: -4px; }
+  .col h2 { margin: 0; padding: 10px 12px; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 18px; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; border-bottom: 3px solid var(--c); }
+  .col h2 .n { margin-left: auto; font-family: "Work Sans", sans-serif; font-size: 12px; font-weight: 600; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+  .col .list { padding: 8px; display: grid; gap: 8px; align-content: start; flex: 1; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 3px; padding: 10px 10px 8px; cursor: pointer; box-shadow: var(--shadow); }
+  .card:hover { border-color: var(--brass); border-left-color: var(--c); }
+  .card.dragging { opacity: .5; }
+  .card .nm { font-weight: 600; display: flex; justify-content: space-between; gap: 8px; }
+  .card .nm time { font-weight: 400; font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .card .sv { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .card .ft { display: flex; gap: 6px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  .chip { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--brass-soft); color: var(--brass); }
+  .chip.src { background: var(--info-soft); color: var(--info); }
+  .wa { margin-left: auto; font-size: 12px; color: var(--ok); text-decoration: none; font-weight: 500; }
+  .wa:hover { text-decoration: underline; }
+  .empty { color: var(--muted); font-size: 12px; text-align: center; padding: 20px 8px; }
+
+  /* drawer */
+  .backdrop { position: fixed; inset: 0; background: rgba(29,25,22,.35); z-index: 10; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100%); background: var(--panel); z-index: 11; box-shadow: -8px 0 30px rgba(0,0,0,.15); display: flex; flex-direction: column; }
+  .drawer .hd { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; gap: 10px; }
+  .drawer .hd h3 { margin: 0; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 28px; letter-spacing: 1px; line-height: 1; }
+  .drawer .hd .x { margin-left: auto; background: none; border: 0; font-size: 22px; cursor: pointer; color: var(--muted); line-height: 1; }
+  .drawer .bd { padding: 16px 20px; overflow-y: auto; flex: 1; display: grid; gap: 18px; align-content: start; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 10px; font-size: 13px; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; word-break: break-word; }
+  .sec h4 { margin: 0 0 8px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .stages { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stages button { font: inherit; font-size: 12.5px; padding: 6px 10px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; }
+  .stages button.cur { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .stages button[data-s="ganho"] { color: var(--ok); border-color: var(--ok); }
+  .stages button[data-s="perdido"] { color: var(--bad); border-color: var(--bad); }
+  .stages button.cur[data-s="ganho"] { background: var(--ok); color: #fff; }
+  .stages button.cur[data-s="perdido"] { background: var(--bad); color: #fff; }
+  .row { display: flex; gap: 8px; }
+  input.f, textarea.f, select.f { font: inherit; width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); }
+  input.f:focus, textarea.f:focus, select.f:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(168,132,47,.15); }
+  textarea.f { min-height: 64px; resize: vertical; }
+  .btn { font: inherit; padding: 8px 14px; border-radius: 3px; border: 1px solid var(--ink); background: var(--ink); color: #fff; cursor: pointer; white-space: nowrap; }
+  .btn.ghost { background: none; color: var(--ink); }
+  .btn.danger { border-color: var(--bad); color: var(--bad); background: none; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .hist { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 12.5px; }
+  .hist li { display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+  .hist time { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .hist .who { color: var(--muted); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 4px; font-size: 13px; z-index: 20; box-shadow: var(--shadow); }
+  .toast.err { background: var(--bad); }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+  @media (max-width: 640px) { header { flex-wrap: wrap; } header input { min-width: 0; flex: 1; } .board { grid-auto-columns: 82vw; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="name">BRAVVO <small>CRM · CAMPANHA META</small></div>
+  <div class="sp"></div>
+  <input id="q" type="search" placeholder="Buscar nome, WhatsApp, serviço…" aria-label="Buscar leads">
+  <span class="sync" id="sync">carregando…</span>
+</header>
+
+<section class="stats" id="stats" aria-label="Resumo do funil"></section>
+<main class="board" id="board" aria-label="Funil de leads"></main>
+
+<div id="drawerRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+const STAGE_COLORS = { novo: '#2f6fb0', contato: '#b7791f', agendado: '#7c5cbf', compareceu: '#1e8f8f', ganho: '#2e8b57', perdido: '#c0392b' };
+const LOST_REASONS = ['Não respondeu', 'Sem horário compatível', 'Achou caro', 'Longe / outra região', 'Só pesquisando', 'Número inválido', 'Outro'];
+let CFG = { stages: [], labels: {} }, LEADS = [], OPEN = null, TIMER = null;
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtPhone = (d) => { d = String(d || ''); const n = d.startsWith('55') ? d.slice(2) : d; return n.length >= 10 ? `(${n.slice(0,2)}) ${n.slice(2, n.length-4)}-${n.slice(-4)}` : d; };
+const ago = (iso) => { const m = Math.max(0, (Date.now() - new Date(iso)) / 60000); if (m < 60) return `${Math.round(m)} min`; const h = m / 60; if (h < 24) return `${Math.floor(h)} h`; return `${Math.floor(h / 24)} d`; };
+const fmtDT = (iso) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+const brl = (v) => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+async function api(method, path, body) {
+  const r = await fetch(path, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || `Erro ${r.status}`);
+  return data;
+}
+function toast(msg, err) {
+  const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg;
+  $('#toastRoot').replaceChildren(t); setTimeout(() => t.remove(), 2600);
+}
+
+async function load() {
+  try {
+    if (!CFG.stages.length) CFG = await api('GET', 'api/config');
+    LEADS = await api('GET', 'api/leads');
+    render();
+    $('#sync').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    if (OPEN) { const l = LEADS.find((x) => x.id === OPEN); if (l) renderDrawer(l); }
+  } catch (e) { $('#sync').textContent = 'erro ao carregar'; toast(e.message, true); }
+}
+
+function render() {
+  const term = $('#q').value.trim().toLowerCase();
+  const vis = LEADS.filter((l) => !term || [l.nome, l.whatsapp, l.servico, l.deslocamento, l.utm_campaign, l.utm_source].join(' ').toLowerCase().includes(term));
+  // stats
+  const c = Object.fromEntries(CFG.stages.map((s) => [s, 0])); let receita = 0;
+  for (const l of LEADS) { c[l.stage]++; if (l.stage === 'ganho') receita += Number(l.valor || 0); }
+  const total = LEADS.length; const ativos = total - c.ganho - c.perdido;
+  $('#stats').innerHTML = [
+    ['Leads', total], ['Em andamento', ativos], ['Agendados', c.agendado], ['Ganhos', c.ganho], ['Perdidos', c.perdido],
+    ['Conversão', total ? (100 * c.ganho / total).toFixed(0) + '%' : '–'], ['Receita', brl(receita)],
+  ].map(([k, v]) => `<div class="stat"><span>${k}</span><b>${v}</b></div>`).join('');
+  // board
+  $('#board').innerHTML = CFG.stages.map((s) => {
+    const items = vis.filter((l) => l.stage === s);
+    return `<section class="col" data-stage="${s}" style="--c:${STAGE_COLORS[s]}">
+      <h2>${esc(CFG.labels[s])}<span class="n">${items.length}</span></h2>
+      <div class="list">${items.length ? items.map(card).join('') : '<div class="empty">nenhum lead</div>'}</div>
+    </section>`;
+  }).join('');
+  bindDnD();
+}
+function card(l) {
+  const src = l.utm_campaign || l.utm_source || (l.fbclid ? 'meta' : null);
+  return `<article class="card" draggable="true" data-id="${l.id}" style="--c:${STAGE_COLORS[l.stage]}">
+    <div class="nm"><span>${esc(l.nome)}</span><time title="${fmtDT(l.created_at)}">${ago(l.created_at)}</time></div>
+    <div class="sv">${esc(l.servico || '—')}</div>
+    <div class="sv">${esc(l.deslocamento || 'deslocamento não informado')} · ${esc(l.horario || '—')}</div>
+    <div class="ft">${src ? `<span class="chip src">${esc(src)}</span>` : ''}${l.stage === 'ganho' && l.valor ? `<span class="chip">${brl(l.valor)}</span>` : ''}${l.stage === 'perdido' && l.lost_reason ? `<span class="chip" style="background:var(--bad-soft);color:var(--bad)">${esc(l.lost_reason)}</span>` : ''}
+      <a class="wa" href="https://wa.me/${l.whatsapp}" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp ↗</a></div>
+  </article>`;
+}
+
+function bindDnD() {
+  document.querySelectorAll('.card').forEach((el) => {
+    el.addEventListener('click', () => openDrawer(el.dataset.id));
+    el.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', el.dataset.id); el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  });
+  document.querySelectorAll('.col').forEach((col) => {
+    col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('over'); });
+    col.addEventListener('dragleave', () => col.classList.remove('over'));
+    col.addEventListener('drop', async (e) => {
+      e.preventDefault(); col.classList.remove('over');
+      const id = e.dataTransfer.getData('text/plain'); const stage = col.dataset.stage;
+      const l = LEADS.find((x) => x.id === id); if (!l || l.stage === stage) return;
+      if (stage === 'perdido' || stage === 'ganho') { openDrawer(id); return setStage(l, stage, true); }
+      await setStage(l, stage);
+    });
+  });
+}
+
+async function setStage(l, stage, askDetails) {
+  let body = { stage, by: 'crm' };
+  if (stage === 'perdido') {
+    const r = prompt('Motivo da perda:\n' + LOST_REASONS.map((x, i) => `${i + 1}. ${x}`).join('\n') + '\n\nDigite o número ou escreva o motivo:');
+    if (r == null) return; const n = parseInt(r, 10);
+    body.lost_reason = (n >= 1 && n <= LOST_REASONS.length) ? LOST_REASONS[n - 1] : r.trim();
+    if (!body.lost_reason) return;
+  }
+  if (stage === 'ganho') {
+    const v = prompt('Valor do atendimento (R$), opcional:', l.valor || '');
+    if (v == null) return; if (v.trim()) body.valor = Number(v.replace(',', '.'));
+  }
+  try { const u = await api('PATCH', `api/leads/${l.id}`, body); Object.assign(l, u); render(); if (OPEN === l.id) renderDrawer(u); toast(`${l.nome} → ${u.stage_label}`); }
+  catch (e) { toast(e.message, true); }
+}
+
+function openDrawer(id) { OPEN = id; const l = LEADS.find((x) => x.id === id); if (l) renderDrawer(l); }
+function closeDrawer() { OPEN = null; $('#drawerRoot').innerHTML = ''; }
+function renderDrawer(l) {
+  const src = [l.utm_source, l.utm_medium, l.utm_campaign, l.utm_content].filter(Boolean).join(' / ') || (l.fbclid ? 'Meta (fbclid)' : 'direto');
+  $('#drawerRoot').innerHTML = `
+  <div class="backdrop" onclick="closeDrawer()"></div>
+  <aside class="drawer" role="dialog" aria-label="Lead ${esc(l.nome)}">
+    <div class="hd">
+      <div><h3>${esc(l.nome)}</h3>
+        <div style="margin-top:6px"><span class="pill" style="background:${STAGE_COLORS[l.stage]}22;color:${STAGE_COLORS[l.stage]}">${esc(l.stage_label)}</span>
+        <a class="wa" style="margin-left:10px" href="https://wa.me/${l.whatsapp}?text=${encodeURIComponent('Olá ' + l.nome.split(' ')[0] + ', aqui é da Bravvo Barbearia! Vi que você pediu um horário pelo nosso site' + (l.servico ? ' (' + l.servico + ')' : '') + '. Qual dia fica melhor pra você?')}" target="_blank" rel="noopener">Chamar no WhatsApp ↗</a></div>
+      </div>
+      <button class="x" onclick="closeDrawer()" aria-label="Fechar">×</button>
+    </div>
+    <div class="bd">
+      <dl class="kv">
+        <dt>WhatsApp</dt><dd>${fmtPhone(l.whatsapp)}</dd>
+        <dt>Serviço</dt><dd>${esc(l.servico || '—')}</dd>
+        <dt>Período</dt><dd>${esc(l.horario || '—')}</dd>
+        <dt>Deslocamento</dt><dd>${esc(l.deslocamento || '—')}</dd>
+        <dt>Entrou em</dt><dd>${fmtDT(l.created_at)}</dd>
+        <dt>Origem</dt><dd>${esc(src)}</dd>
+        ${l.valor ? `<dt>Valor</dt><dd>${brl(l.valor)}</dd>` : ''}
+        ${l.lost_reason ? `<dt>Perda</dt><dd>${esc(l.lost_reason)}</dd>` : ''}
+      </dl>
+      <div class="sec"><h4>Mover no funil</h4>
+        <div class="stages">${CFG.stages.map((s) => `<button data-s="${s}" class="${s === l.stage ? 'cur' : ''}" ${s === l.stage ? 'disabled' : ''} onclick="setStage(LEADS.find(x=>x.id==='${l.id}'),'${s}')">${esc(CFG.labels[s])}</button>`).join('')}</div>
+      </div>
+      <div class="sec"><h4>Observação</h4>
+        <div class="row"><textarea class="f" id="note" placeholder="Ex.: pediu horário sábado 10h, confirmar com o Léo"></textarea></div>
+        <div class="row" style="margin-top:8px;justify-content:flex-end"><button class="btn" onclick="addNote('${l.id}')">Salvar observação</button></div>
+      </div>
+      <div class="sec"><h4>Histórico</h4>
+        <ul class="hist">${[...l.events].reverse().map((e) => `<li><time>${fmtDT(e.at)}</time><div>${e.type === 'stage' ? `<b>${esc(CFG.labels[e.from_stage] || e.from_stage)}</b> → <b>${esc(CFG.labels[e.to_stage] || e.to_stage)}</b>${e.text ? ' · ' + esc(e.text) : ''}` : esc(e.text)} <span class="who">· ${esc(e.by)}</span></div></li>`).join('')}</ul>
+      </div>
+      <div class="sec"><h4>Dados</h4>
+        <div class="row"><input class="f" id="e_nome" value="${esc(l.nome)}" placeholder="Nome"><input class="f" id="e_wa" value="${esc(l.whatsapp)}" placeholder="WhatsApp"></div>
+        <div class="row" style="margin-top:8px"><input class="f" id="e_valor" value="${l.valor ?? ''}" placeholder="Valor (R$)" inputmode="decimal"><button class="btn ghost" onclick="saveInfo('${l.id}')">Salvar</button><button class="btn danger" onclick="del('${l.id}')">Excluir</button></div>
+      </div>
+    </div>
+  </aside>`;
+}
+async function addNote(id) {
+  const t = $('#note').value.trim(); if (!t) return;
+  try { const u = await api('PATCH', `api/leads/${id}`, { note: t, by: 'crm' }); Object.assign(LEADS.find((x) => x.id === id), u); renderDrawer(u); toast('Observação salva'); }
+  catch (e) { toast(e.message, true); }
+}
+async function saveInfo(id) {
+  try {
+    const u = await api('PATCH', `api/leads/${id}`, { nome: $('#e_nome').value, whatsapp: $('#e_wa').value, valor: $('#e_valor').value, by: 'crm' });
+    Object.assign(LEADS.find((x) => x.id === id), u); render(); renderDrawer(u); toast('Dados salvos');
+  } catch (e) { toast(e.message, true); }
+}
+async function del(id) {
+  if (!confirm('Excluir este lead? Isso não pode ser desfeito.')) return;
+  try { await api('DELETE', `api/leads/${id}`); LEADS = LEADS.filter((x) => x.id !== id); closeDrawer(); render(); toast('Lead excluído'); }
+  catch (e) { toast(e.message, true); }
+}
+
+$('#q').addEventListener('input', render);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+load();
+TIMER = setInterval(() => { if (!document.hidden) load(); }, 20000);
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bravvo Barbearia · Agende seu corte</title>
+<meta name="description" content="Corte, barba e cuidado de verdade. Deixe seu WhatsApp e a Bravvo confirma seu horário.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/logo-bravvo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Bebas+Neue&display=swap">
+<style>
+  :root {
+    --ink: #141412; --coal: #1b1b1b; --line: #2e2e29;
+    --brass: #c3a05f; --brass-deep: #a8874a;
+    --cream: #e3dfd4; --muted: #a8a69b; --err: #e0684f;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; }
+  body {
+    margin: 0; background: var(--ink); color: var(--cream);
+    font-family: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px; line-height: 1.5;
+    padding-inline: 20px; padding-block: 28px 48px;
+    background-image: repeating-linear-gradient(135deg, transparent 0 14px, rgba(195,160,95,.035) 14px 16px);
+  }
+  .wrap { max-width: 440px; margin: 0 auto; }
+  .brand { margin-bottom: 28px; }
+  .brand img { height: 34px; width: auto; display: block; }
+    font-family: "Bebas Neue", Impact, sans-serif; font-size: 24px; color: var(--brass); letter-spacing: 1px; }
+  .brand .name { font-family: "Bebas Neue", Impact, sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--cream); }
+  .brand .tag { display: block; font-family: "Archivo", sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  h1 { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: clamp(44px, 12vw, 60px);
+    line-height: .92; letter-spacing: .5px; margin: 0 0 14px; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--brass); }
+  .lead { color: var(--muted); margin: 0 0 24px; max-width: 34ch; }
+  .rule { height: 1px; background: linear-gradient(90deg, var(--brass), transparent); margin: 0 0 22px; }
+
+  form { background: var(--coal); border: 1px solid var(--line); padding: 22px 20px 20px; }
+  form .eyebrow { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--brass); margin: 0 0 16px; }
+  .field { display: grid; gap: 6px; margin-bottom: 14px; }
+  label { font-size: 13px; font-weight: 500; color: var(--cream); }
+  input, select {
+    width: 100%; font: inherit; color: var(--cream); background: var(--ink);
+    border: 1px solid var(--line); border-radius: 3px; padding: 12px 12px; outline: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c8a24a' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px; }
+  input:focus, select:focus { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(195,160,95,.18); }
+  input::placeholder { color: #6f6357; }
+  fieldset.opts { border: 0; padding: 0; margin: 0 0 14px; }
+  fieldset.opts legend { font-size: 13px; font-weight: 500; padding: 0; margin-bottom: 8px; }
+  .grp { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
+  .grp.club { display: flex; align-items: center; gap: 10px; }
+  .grp.club img { height: 22px; width: auto; }
+  .grp.club span { letter-spacing: 0; text-transform: none; font-size: 12px; }
+  .grp small { letter-spacing: 0; text-transform: none; font-size: 11px; }
+  .opt { display: flex; align-items: center; gap: 10px; background: var(--ink); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; font-weight: 400; }
+  .opt input { width: 16px; height: 16px; margin: 0; accent-color: var(--brass); flex: none; }
+  .opt span { flex: 1; }
+  .opt span em { font-style: normal; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--brass); margin-left: 6px; }
+  .opt b { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 20px; letter-spacing: .5px; color: var(--cream); white-space: nowrap; }
+  .opt b small { font-family: "Archivo", sans-serif; font-size: 11px; color: var(--muted); }
+  .opt:has(input:checked) { border-color: var(--brass); background: #1d1813; box-shadow: inset 0 0 0 1px var(--brass); }
+  .opt.best { border-color: #5a4a25; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  button {
+    width: 100%; margin-top: 6px; cursor: pointer; border: 0; border-radius: 3px;
+    background: var(--brass); color: var(--ink);
+    font-family: "Bebas Neue", Impact, sans-serif; font-size: 22px; letter-spacing: 2px; padding: 14px;
+    transition: background .15s, transform .1s;
+  }
+  button:hover { background: #d1b070; }
+  button:active { transform: translateY(1px); }
+  button:disabled { opacity: .6; cursor: wait; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+  .msg { min-height: 20px; font-size: 13px; color: var(--err); margin-top: 10px; }
+  .fine { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  .proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 26px; }
+  .proof div { border-top: 1px solid var(--line); padding-top: 10px; font-size: 12px; color: var(--muted); }
+  .proof strong { display: block; font-family: "Bebas Neue", Impact, sans-serif; font-size: 22px; letter-spacing: 1px; color: var(--cream); font-weight: 400; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<!-- Meta Pixel -->
+<script>
+  window.BRAVVO_PIXEL = "{{META_PIXEL_ID}}";
+  if (window.BRAVVO_PIXEL) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', window.BRAVVO_PIXEL); fbq('track', 'PageView');
+  }
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <img src="img/logo-bravvo.png" alt="Bravvo Barbearia" width="900" height="125">
+  </div>
+
+  <h1>Corte na régua.<br><em>Barba no capricho.</em></h1>
+  <p class="lead">Antes de falar com a gente, três perguntas rápidas. Assim o atendimento já começa com o horário na mão.</p>
+  <div class="rule"></div>
+
+  <form id="form" novalidate>
+    <p class="eyebrow">Reserve seu horário</p>
+
+    <div class="field">
+      <label for="nome">Seu nome</label>
+      <input id="nome" name="nome" type="text" autocomplete="given-name" placeholder="Como te chamamos?" required>
+    </div>
+    <div class="field">
+      <label for="whatsapp">WhatsApp (com DDD)</label>
+      <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required>
+    </div>
+    <fieldset class="field opts">
+      <legend>Qual tipo de serviço você procura?</legend>
+      <p class="grp club"><img src="img/logo-bravvo-club.png" alt="Bravvo Club" width="760" height="208"><span>Assinatura mensal · quantas vezes quiser</span></p>
+      <label class="opt"><input type="radio" name="servico" value="Assinatura Cabelo R$ 79,90/mês" required><span>Cabelo</span><b>R$ 79,90<small>/mês</small></b></label>
+      <label class="opt"><input type="radio" name="servico" value="Assinatura Barba R$ 89,90/mês"><span>Barba</span><b>R$ 89,90<small>/mês</small></b></label>
+      <label class="opt best"><input type="radio" name="servico" value="Assinatura Cabelo + Barba R$ 139,90/mês"><span>Cabelo + Barba <em>mais escolhido</em></span><b>R$ 139,90<small>/mês</small></b></label>
+      <p class="grp">Avulso</p>
+      <label class="opt"><input type="radio" name="servico" value="Corte (avulso) R$ 45"><span>Corte</span><b>R$ 45</b></label>
+      <label class="opt"><input type="radio" name="servico" value="Barba (avulso) R$ 45"><span>Barba</span><b>R$ 45</b></label>
+    </fieldset>
+    <div class="field">
+      <label for="deslocamento">Quanto tempo você toparia se deslocar pra pagar menos num serviço bom?</label>
+      <select id="deslocamento" name="deslocamento" required>
+        <option value="" disabled selected>Escolha…</option>
+        <option value="Até 10 min">Até 10 minutos</option>
+        <option value="Até 20 min">Até 20 minutos</option>
+        <option value="Até 30 min">Até 30 minutos</option>
+        <option value="Mais de 30 min">Mais de 30 minutos</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="horario">Melhor período</label>
+      <select id="horario" name="horario" required>
+        <option value="" disabled selected>Escolha…</option>
+        <option value="Manhã">Manhã</option>
+        <option value="Tarde">Tarde</option>
+        <option value="Noite">Noite</option>
+        <option value="Sábado">Sábado</option>
+      </select>
+    </div>
+    <div class="hp" aria-hidden="true">
+      <label for="website">Site</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button id="btn" type="submit">Enviar e falar no WhatsApp</button>
+    <div class="msg" id="msg" role="alert" aria-live="polite"></div>
+    <p class="fine">Ao enviar, seu WhatsApp abre com a mensagem pronta pra gente confirmar o horário. Seus dados ficam só com a Bravvo.</p>
+  </form>
+
+  <div class="proof">
+    <div><strong>+2 mil</strong>cortes feitos</div>
+    <div><strong>4,9★</strong>no Google</div>
+    <div><strong>Sem fila</strong>hora marcada</div>
+  </div>
+</div>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+  const cookie = (k) => (document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')) || [])[1] || '';
+
+  // máscara simples do telefone
+  $('#whatsapp').addEventListener('input', (e) => {
+    let d = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (d.length > 6) d = `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+    else if (d.length > 2) d = `(${d.slice(0,2)}) ${d.slice(2)}`;
+    e.target.value = d;
+  });
+
+  $('#form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('#msg'), btn = $('#btn');
+    msg.textContent = '';
+    const body = {
+      nome: $('#nome').value, whatsapp: $('#whatsapp').value,
+      servico: (document.querySelector('input[name=servico]:checked') || {}).value || '', deslocamento: $('#deslocamento').value,
+      horario: $('#horario').value, website: $('#website').value,
+      utm_source: params.get('utm_source'), utm_medium: params.get('utm_medium'),
+      utm_campaign: params.get('utm_campaign'), utm_content: params.get('utm_content'), utm_term: params.get('utm_term'),
+      fbclid: params.get('fbclid'), fbp: cookie('_fbp'), fbc: cookie('_fbc'),
+      referrer: document.referrer, landing_url: location.href,
+    };
+    if (body.nome.trim().length < 2) return msg.textContent = 'Digite seu nome.';
+    if (body.whatsapp.replace(/\D/g, '').length < 10) return msg.textContent = 'Digite seu WhatsApp com DDD.';
+    if (!body.servico) return msg.textContent = 'Escolha o serviço que você procura.';
+    if (!body.deslocamento) return msg.textContent = 'Diga quanto tempo você toparia se deslocar.';
+    if (!body.horario) return msg.textContent = 'Escolha o melhor período pra você.';
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    try {
+      const r = await fetch('api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Não foi possível enviar.');
+      const q = new URLSearchParams({ id: data.id || '', eid: data.event_id || '', nome: body.nome.trim().split(' ')[0], servico: body.servico, deslocamento: body.deslocamento });
+      location.href = 'obrigado?' + q.toString();
+    } catch (err) {
+      msg.textContent = err.message; btn.disabled = false; btn.textContent = 'Enviar e falar no WhatsApp';
+    }
+  });
+</script>
+</body>
+</html>
