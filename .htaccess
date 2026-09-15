@@ -1,11 +1,10 @@
 Options -Indexes
 DirectoryIndex index.php
 
-# Bloqueia acesso direto a arquivos internos
-<FilesMatch "^(config\.php|config\.example\.php|_page\.php|_bootstrap\.php|crm\.js|dev-server\.php|README\.md|\.gitignore|\.gitattributes|\.env)$">
-  Require all denied
-</FilesMatch>
+# Bloqueia acesso direto a arquivos internos (só os desta pasta; api/config.php continua liberado)
 RewriteEngine On
+RewriteRule ^(config\.php|config\.example\.php|_page\.php|crm\.js|dev-server\.php|README\.md|\.gitignore|\.gitattributes|\.env)$ - [F,L]
+RewriteRule ^api/_bootstrap\.php$ - [F,L]
 RewriteRule ^(templates|data|\.git)(/|$) - [F,L]
 
 # Repassa o header Authorization ao PHP (necessário no LiteSpeed/CGI)
