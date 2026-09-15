@@ -10,7 +10,7 @@ Feito para rodar na hospedagem compartilhada da Hostinger (plano Business): só 
 index.php             landing (renderiza templates/index.html)
 obrigado.php          página de obrigado (evento Lead do Pixel)
 crm.php               kanban, protegido por login
-api/                  leads.php (cria/lista), lead.php (move/edita/exclui), stats.php, config.php
+api/                  leads.php (cria/lista), lead.php (move/edita/exclui), stats.php, funil.php
 templates/            HTML das páginas
 img/                  logos
 data/leads.json       os leads (criado sozinho no primeiro envio, fora do git)
@@ -69,6 +69,7 @@ node crm.js stats
 | PATCH ou POST | `/api/leads/{id}` | sim | `{stage, lost_reason, valor, note, nome, whatsapp, servico, horario}` |
 | DELETE | `/api/leads/{id}` | sim | remove |
 | GET | `/api/stats` | sim | contagem por etapa, conversão, receita |
+| GET | `/api/funil` | sim | etapas e rótulos do funil |
 
 Auth: `Authorization: Bearer <api_token>` ou Basic (usuário/senha do CRM).
 

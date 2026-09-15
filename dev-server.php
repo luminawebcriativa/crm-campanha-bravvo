@@ -7,7 +7,7 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $base = rtrim(getenv('BASE') ?: '', '/');
 if ($base) { if (!str_starts_with($path, $base . '/') && $path !== $base) { http_response_code(404); echo 'Fora da subpasta'; return true; } $path = substr($path, strlen($base)) ?: '/'; }
 if (preg_match('#^/(crm|obrigado)/$#', $path, $mm)) { header('Location: ' . $base . '/' . $mm[1], true, 301); return true; }
-$map = ['#^/?$#'=>'index.php','#^/obrigado/?$#'=>'obrigado.php','#^/crm/?$#'=>'crm.php','#^/api/leads/?$#'=>'api/leads.php','#^/api/stats/?$#'=>'api/stats.php','#^/api/config/?$#'=>'api/config.php'];
+$map = ['#^/?$#'=>'index.php','#^/obrigado/?$#'=>'obrigado.php','#^/crm/?$#'=>'crm.php','#^/api/leads/?$#'=>'api/leads.php','#^/api/stats/?$#'=>'api/stats.php','#^/api/(config|funil)/?$#'=>'api/funil.php'];
 foreach ($map as $re => $f) if (preg_match($re, $path)) { chdir(dirname("$root/$f")); require "$root/$f"; return true; }
 if (preg_match('#^/api/leads/([a-z0-9]+)/?$#', $path, $m)) { $_GET['id'] = $m[1]; chdir("$root/api"); require "$root/api/lead.php"; return true; }
 $f = realpath($root . $path);

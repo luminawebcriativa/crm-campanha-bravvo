@@ -127,7 +127,7 @@ function toast(msg, err) {
 
 async function load() {
   try {
-    if (!CFG.stages.length) CFG = await api('GET', 'api/config');
+    if (!CFG.stages.length) CFG = await api('GET', 'api/funil');
     LEADS = await api('GET', 'api/leads');
     render();
     $('#sync').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });

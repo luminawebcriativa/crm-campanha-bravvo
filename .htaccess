@@ -18,7 +18,7 @@ RewriteRule ^crm$ crm.php [L]
 RewriteRule ^api/leads/?$ api/leads.php [L]
 RewriteRule ^api/leads/([a-z0-9]+)/?$ api/lead.php?id=$1 [L,QSA]
 RewriteRule ^api/stats/?$ api/stats.php [L]
-RewriteRule ^api/config/?$ api/config.php [L]
+RewriteRule ^api/(config|funil)/?$ api/funil.php [L]
 
 # Segurança básica
 <IfModule mod_headers.c>
