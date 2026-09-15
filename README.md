@@ -7,31 +7,31 @@ Feito para rodar na hospedagem compartilhada da Hostinger (plano Business): só 
 ## Estrutura
 
 ```
-public_html/            ← conteúdo que vai para o public_html da Hostinger
-  index.php             landing (renderiza templates/index.html)
-  obrigado.php          página de obrigado (evento Lead do Pixel)
-  crm.php               kanban, protegido por login
-  api/leads.php         POST cria lead (público) · GET lista (auth)
-  api/lead.php          GET / PATCH / DELETE de um lead (auth)
-  api/stats.php         números do funil (auth)
-  api/config.php        etapas do funil (auth)
-  templates/            HTML das páginas
-  img/                  logos
-  data/leads.json       os leads (criado sozinho no primeiro envio)
-  .htaccess             rotas amigáveis e bloqueio de arquivos internos
-  config.example.php    → copie para config.php e preencha
-crm.js                  CLI para operar o funil pela API
+index.php             landing (renderiza templates/index.html)
+obrigado.php          página de obrigado (evento Lead do Pixel)
+crm.php               kanban, protegido por login
+api/                  leads.php (cria/lista), lead.php (move/edita/exclui), stats.php, config.php
+templates/            HTML das páginas
+img/                  logos
+data/leads.json       os leads (criado sozinho no primeiro envio, fora do git)
+.htaccess             rotas amigáveis e bloqueio de arquivos internos
+config.example.php    → copie para config.php e preencha (fora do git)
+crm.js                CLI para operar o funil pela API (não é servido)
+dev-server.php        servidor local de testes (não é servido)
 ```
 
-## Publicar na Hostinger (passo a passo)
+## Publicar na Hostinger via Git (passo a passo)
 
-1. **Arquivos**: crie a pasta `public_html/agendar` no domínio bravvobarbearia.com.br e envie para ela tudo que está dentro de `public_html/` deste projeto (Gerenciador de arquivos ou FTP). O `.htaccess` e a pasta `data/` precisam ir junto. Todos os caminhos são relativos, então qualquer nome de pasta funciona.
-2. **Config**: no servidor, copie `config.example.php` para `config.php` e preencha senha do CRM, token da API, ID do Pixel e WhatsApp.
-3. **PHP**: hPanel → Configuração PHP → versão 8.1 ou superior (a extensão `curl` já vem ligada).
-4. **HTTPS**: ative o SSL gratuito no hPanel e force HTTPS. O Pixel e a verificação de domínio da Meta exigem.
-5. Teste: `https://bravvobarbearia.com.br/agendar/` deve abrir a landing e `https://bravvobarbearia.com.br/agendar/crm` deve pedir login. Envie um lead de teste e confira se ele aparece no CRM.
+1. **Conectar o repositório**: hPanel → Avançado → Git → Criar novo repositório.
+   Repositório: `https://github.com/luminawebcriativa/crm-campanha-bravvo.git`, branch `main`, diretório `public_html/agendar`.
+   Se o repositório for privado, o hPanel mostra uma chave SSH: cadastre em GitHub → Settings → Deploy keys e use a URL SSH do repositório.
+2. **Deploy**: clique em "Implantar" (Deploy). A pasta precisa estar vazia na primeira vez.
+3. **Config**: no Gerenciador de Arquivos, dentro de `public_html/agendar`, copie `config.example.php` para `config.php` e preencha senha do CRM, token, ID do Pixel e WhatsApp.
+4. **Atualização automática**: no mesmo painel Git, copie a URL do webhook e cadastre em GitHub → Settings → Webhooks → Add webhook (Payload URL = webhook, Content type = application/json, evento Push). A partir daí, todo push na `main` atualiza o site.
+5. **HTTPS**: ative o SSL gratuito no hPanel e force HTTPS.
+6. Teste: `https://bravvobarbearia.com.br/agendar/` abre a landing e `https://bravvobarbearia.com.br/agendar/crm` pede login.
 
-Backup: o arquivo `public_html/data/leads.json` é tudo. Baixe ele de vez em quando.
+O deploy só troca os arquivos do repositório. `config.php` e `data/leads.json` não estão no git, então nunca são sobrescritos. Backup: baixe `data/leads.json` de vez em quando.
 
 ## Etapas do funil
 

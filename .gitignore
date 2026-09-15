@@ -1,4 +1,4 @@
 .env
-public_html/config.php
-public_html/data/leads.json
+/config.php
+/data/leads.json
 .DS_Store
