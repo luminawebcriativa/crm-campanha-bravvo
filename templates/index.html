@@ -101,7 +101,7 @@
   </div>
 
   <h1>Corte na régua.<br><em>Barba no capricho.</em></h1>
-  <p class="lead">Antes de falar com a gente, três perguntas rápidas. Assim o atendimento já começa com o horário na mão.</p>
+  <p class="lead">Três perguntas rápidas e a equipe da Bravvo te chama no WhatsApp com o horário na mão.</p>
   <div class="rule"></div>
 
   <form id="form" novalidate>
@@ -150,9 +150,9 @@
       <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
     </div>
 
-    <button id="btn" type="submit">Enviar e falar no WhatsApp</button>
+    <button id="btn" type="submit">Quero meu horário</button>
     <div class="msg" id="msg" role="alert" aria-live="polite"></div>
-    <p class="fine">Ao enviar, seu WhatsApp abre com a mensagem pronta pra gente confirmar o horário. Seus dados ficam só com a Bravvo.</p>
+    <p class="fine">Depois de enviar, a equipe da Bravvo chama você no WhatsApp pra confirmar. Seus dados ficam só com a Bravvo.</p>
   </form>
 
   <div class="proof">
@@ -201,7 +201,7 @@
       const q = new URLSearchParams({ id: data.id || '', eid: data.event_id || '', nome: body.nome.trim().split(' ')[0], servico: body.servico, deslocamento: body.deslocamento });
       location.href = 'obrigado?' + q.toString();
     } catch (err) {
-      msg.textContent = err.message; btn.disabled = false; btn.textContent = 'Enviar e falar no WhatsApp';
+      msg.textContent = err.message; btn.disabled = false; btn.textContent = 'Quero meu horário';
     }
   });
 </script>
