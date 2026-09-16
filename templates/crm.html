@@ -137,7 +137,7 @@ async function load() {
 
 function render() {
   const term = $('#q').value.trim().toLowerCase();
-  const vis = LEADS.filter((l) => !term || [l.nome, l.whatsapp, l.servico, l.deslocamento, l.utm_campaign, l.utm_source].join(' ').toLowerCase().includes(term));
+  const vis = LEADS.filter((l) => !term || [l.nome, l.whatsapp, l.servico, l.setor, l.quando, l.utm_campaign, l.utm_source].join(' ').toLowerCase().includes(term));
   // stats
   const c = Object.fromEntries(CFG.stages.map((s) => [s, 0])); let receita = 0;
   for (const l of LEADS) { c[l.stage]++; if (l.stage === 'ganho') receita += Number(l.valor || 0); }
@@ -156,13 +156,19 @@ function render() {
   }).join('');
   bindDnD();
 }
+function quandoChip(l) {
+  if (!l.quando) return '';
+  const q = l.quando;
+  const style = /essa semana/i.test(q) ? 'background:var(--ok-soft);color:var(--ok)' : /pesquisando/i.test(q) ? 'background:var(--bad-soft);color:var(--bad)' : 'background:var(--warn-soft);color:var(--warn)';
+  return `<span class="chip" style="${style}" title="Quando quer vir">${esc(q)}</span>`;
+}
 function card(l) {
   const src = l.utm_campaign || l.utm_source || (l.fbclid ? 'meta' : null);
   return `<article class="card" draggable="true" data-id="${l.id}" style="--c:${STAGE_COLORS[l.stage]}">
     <div class="nm"><span>${esc(l.nome)}</span><time title="${fmtDT(l.created_at)}">${ago(l.created_at)}</time></div>
     <div class="sv">${esc(l.servico || '—')}</div>
-    <div class="sv">${esc(l.deslocamento || 'deslocamento não informado')} · ${esc(l.horario || '—')}</div>
-    <div class="ft">${src ? `<span class="chip src">${esc(src)}</span>` : ''}${l.stage === 'ganho' && l.valor ? `<span class="chip">${brl(l.valor)}</span>` : ''}${l.stage === 'perdido' && l.lost_reason ? `<span class="chip" style="background:var(--bad-soft);color:var(--bad)">${esc(l.lost_reason)}</span>` : ''}
+    <div class="sv">${esc(l.setor || 'setor não informado')} · ${esc(l.horario || '—')}</div>
+    <div class="ft">${quandoChip(l)}${src ? `<span class="chip src">${esc(src)}</span>` : ''}${l.stage === 'ganho' && l.valor ? `<span class="chip">${brl(l.valor)}</span>` : ''}${l.stage === 'perdido' && l.lost_reason ? `<span class="chip" style="background:var(--bad-soft);color:var(--bad)">${esc(l.lost_reason)}</span>` : ''}
       <a class="wa" href="https://wa.me/${l.whatsapp}" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp ↗</a></div>
   </article>`;
 }
@@ -221,7 +227,8 @@ function renderDrawer(l) {
         <dt>WhatsApp</dt><dd>${fmtPhone(l.whatsapp)}</dd>
         <dt>Serviço</dt><dd>${esc(l.servico || '—')}</dd>
         <dt>Período</dt><dd>${esc(l.horario || '—')}</dd>
-        <dt>Deslocamento</dt><dd>${esc(l.deslocamento || '—')}</dd>
+        <dt>Setor</dt><dd>${esc(l.setor || '—')}</dd>
+        <dt>Quer vir</dt><dd>${esc(l.quando || '—')}</dd>
         <dt>Entrou em</dt><dd>${fmtDT(l.created_at)}</dd>
         <dt>Origem</dt><dd>${esc(src)}</dd>
         ${l.valor ? `<dt>Valor</dt><dd>${brl(l.valor)}</dd>` : ''}

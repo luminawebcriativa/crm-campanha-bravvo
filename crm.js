@@ -43,9 +43,9 @@ try {
     const stage = args[0];
     const leads = await api("GET", "/api/leads");
     const rows = stage ? leads.filter((l) => l.stage === stage) : leads;
-    console.log(pad("id", 13) + pad("etapa", 12) + pad("criado", 13) + pad("nome", 22) + pad("whatsapp", 15) + pad("serviço", 30) + pad("deslocamento", 16) + "origem");
+    console.log(pad("id", 13) + pad("etapa", 12) + pad("criado", 13) + pad("nome", 22) + pad("whatsapp", 15) + pad("serviço", 30) + pad("setor", 16) + pad("quando", 14) + "origem");
     for (const l of rows)
-      console.log(pad(l.id, 13) + pad(l.stage, 12) + pad(fmtDate(l.created_at), 13) + pad(l.nome, 22) + pad(l.whatsapp, 15) + pad(l.servico, 30) + pad(l.deslocamento, 16) + (l.utm_campaign || l.utm_source || "-"));
+      console.log(pad(l.id, 13) + pad(l.stage, 12) + pad(fmtDate(l.created_at), 13) + pad(l.nome, 22) + pad(l.whatsapp, 15) + pad(l.servico, 30) + pad(l.setor, 16) + pad(l.quando, 14) + (l.utm_campaign || l.utm_source || "-"));
     console.log(`\n${rows.length} lead(s)`);
   } else if (cmd === "show") {
     const l = await api("GET", `/api/leads/${args[0]}`);

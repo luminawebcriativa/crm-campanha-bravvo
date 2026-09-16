@@ -1,7 +1,7 @@
 <?php
 // /api/leads/{id}
 //   GET     → um lead com histórico
-//   PATCH   → {stage, lost_reason, valor, note, nome, whatsapp, servico, horario, deslocamento, by}  (POST também aceito)
+//   PATCH   → {stage, lost_reason, valor, note, nome, whatsapp, servico, horario, setor, quando, by}  (POST também aceito)
 //   DELETE  → remove
 require __DIR__ . '/_bootstrap.php';
 
@@ -31,7 +31,7 @@ if ($m === 'PATCH' || $m === 'POST') {
   $note = clean($b['note'] ?? null, 2000);
   $info = [
     'nome' => clean($b['nome'] ?? null, 120), 'whatsapp' => $wa ?: null,
-    'servico' => clean($b['servico'] ?? null, 80), 'horario' => clean($b['horario'] ?? null, 80), 'deslocamento' => clean($b['deslocamento'] ?? null, 80),
+    'servico' => clean($b['servico'] ?? null, 80), 'horario' => clean($b['horario'] ?? null, 80), 'setor' => clean($b['setor'] ?? null, 80), 'quando' => clean($b['quando'] ?? null, 40),
   ];
 
   store_update(function (&$d) use ($id, $stage, $lost, $valor, $info, $note, $by) {

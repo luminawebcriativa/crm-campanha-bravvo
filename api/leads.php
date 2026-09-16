@@ -22,7 +22,7 @@ if (method() === 'POST') {
   $lead = [
     'id' => $id, 'created_at' => $ts, 'updated_at' => $ts,
     'nome' => $nome, 'whatsapp' => $wa,
-    'servico' => clean($b['servico'] ?? null, 80), 'horario' => clean($b['horario'] ?? null, 80), 'deslocamento' => clean($b['deslocamento'] ?? null, 80),
+    'servico' => clean($b['servico'] ?? null, 80), 'horario' => clean($b['horario'] ?? null, 80), 'setor' => clean($b['setor'] ?? null, 80), 'quando' => clean($b['quando'] ?? null, 40),
     'stage' => 'novo', 'lost_reason' => null, 'valor' => null,
     'utm_source' => clean($b['utm_source'] ?? null), 'utm_medium' => clean($b['utm_medium'] ?? null), 'utm_campaign' => clean($b['utm_campaign'] ?? null),
     'utm_content' => clean($b['utm_content'] ?? null), 'utm_term' => clean($b['utm_term'] ?? null),

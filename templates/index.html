@@ -101,7 +101,7 @@
   </div>
 
   <h1>Corte na régua.<br><em>Barba no capricho.</em></h1>
-  <p class="lead">Três perguntas rápidas e a equipe da Bravvo te chama no WhatsApp com o horário na mão.</p>
+  <p class="lead">Responde rapidinho e a equipe da Bravvo te chama no WhatsApp com o horário na mão.</p>
   <div class="rule"></div>
 
   <form id="form" novalidate>
@@ -126,13 +126,16 @@
       <label class="opt"><input type="radio" name="servico" value="Barba (avulso) R$ 45"><span>Barba</span><b>R$ 45</b></label>
     </fieldset>
     <div class="field">
-      <label for="deslocamento">Quanto tempo você toparia se deslocar pra pagar menos num serviço bom?</label>
-      <select id="deslocamento" name="deslocamento" required>
+      <label for="setor">Qual setor você mora?</label>
+      <input id="setor" name="setor" type="text" autocomplete="address-level3" placeholder="Ex.: Setor Bueno, Jardim América…" required>
+    </div>
+    <div class="field">
+      <label for="quando">Quando você quer vir?</label>
+      <select id="quando" name="quando" required>
         <option value="" disabled selected>Escolha…</option>
-        <option value="Até 10 min">Até 10 minutos</option>
-        <option value="Até 20 min">Até 20 minutos</option>
-        <option value="Até 30 min">Até 30 minutos</option>
-        <option value="Mais de 30 min">Mais de 30 minutos</option>
+        <option value="Essa semana">Essa semana</option>
+        <option value="Próxima semana">Próxima semana</option>
+        <option value="Só estou pesquisando">Só estou pesquisando</option>
       </select>
     </div>
     <div class="field">
@@ -181,7 +184,7 @@
     msg.textContent = '';
     const body = {
       nome: $('#nome').value, whatsapp: $('#whatsapp').value,
-      servico: (document.querySelector('input[name=servico]:checked') || {}).value || '', deslocamento: $('#deslocamento').value,
+      servico: (document.querySelector('input[name=servico]:checked') || {}).value || '', setor: $('#setor').value, quando: $('#quando').value,
       horario: $('#horario').value, website: $('#website').value,
       utm_source: params.get('utm_source'), utm_medium: params.get('utm_medium'),
       utm_campaign: params.get('utm_campaign'), utm_content: params.get('utm_content'), utm_term: params.get('utm_term'),
@@ -191,14 +194,15 @@
     if (body.nome.trim().length < 2) return msg.textContent = 'Digite seu nome.';
     if (body.whatsapp.replace(/\D/g, '').length < 10) return msg.textContent = 'Digite seu WhatsApp com DDD.';
     if (!body.servico) return msg.textContent = 'Escolha o serviço que você procura.';
-    if (!body.deslocamento) return msg.textContent = 'Diga quanto tempo você toparia se deslocar.';
+    if (body.setor.trim().length < 2) return msg.textContent = 'Diga qual setor você mora.';
+    if (!body.quando) return msg.textContent = 'Diga quando você quer vir.';
     if (!body.horario) return msg.textContent = 'Escolha o melhor período pra você.';
     btn.disabled = true; btn.textContent = 'Enviando…';
     try {
       const r = await fetch('api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Não foi possível enviar.');
-      const q = new URLSearchParams({ id: data.id || '', eid: data.event_id || '', nome: body.nome.trim().split(' ')[0], servico: body.servico, deslocamento: body.deslocamento });
+      const q = new URLSearchParams({ id: data.id || '', eid: data.event_id || '', nome: body.nome.trim().split(' ')[0], servico: body.servico });
       location.href = 'obrigado?' + q.toString();
     } catch (err) {
       msg.textContent = err.message; btn.disabled = false; btn.textContent = 'Quero meu horário';
