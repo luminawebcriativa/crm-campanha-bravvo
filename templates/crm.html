@@ -81,6 +81,47 @@
   .hist time { color: var(--muted); font-variant-numeric: tabular-nums; }
   .hist .who { color: var(--muted); }
   .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  /* abas e painel */
+  .tabs { display: flex; gap: 4px; background: #221d19; border: 1px solid #3a322b; border-radius: 4px; padding: 3px; }
+  .tabs button { font: inherit; font-size: 13px; padding: 5px 12px; border: 0; border-radius: 3px; background: none; color: #a79b8a; cursor: pointer; }
+  .tabs button.on { background: #c3a05f; color: #141412; font-weight: 600; }
+  .dash { display: none; padding: 16px 20px 32px; gap: 14px; grid-template-columns: repeat(12, 1fr); }
+  .dash.on { display: grid; }
+  .dash .bar-controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .dash .bar-controls label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .dash .bar-controls select, .dash .bar-controls input { font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); width: auto; }
+  .dash .tiles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; }
+  .tile span { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .tile b { font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tile small { display: block; font-size: 11px; color: var(--muted); }
+  .tile.alert b { color: var(--bad); }
+  .panel { background: var(--panel); border: 1px solid var(--line); padding: 14px 16px; grid-column: span 6; min-width: 0; }
+  .panel.wide { grid-column: 1 / -1; }
+  .panel h3 { margin: 0 0 2px; font-family: "Bebas Neue", Impact, sans-serif; font-weight: 400; font-size: 20px; letter-spacing: 1.5px; }
+  .panel .q { margin: 0 0 12px; font-size: 12px; color: var(--muted); }
+  .cols { display: flex; align-items: flex-end; gap: 4px; height: 140px; border-bottom: 1px solid var(--line); padding-bottom: 0; }
+  .cols .c { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; position: relative; min-width: 0; }
+  .cols .c i { display: block; width: 100%; max-width: 28px; background: var(--brass); border-radius: 3px 3px 0 0; min-height: 2px; }
+  .cols .c i.zero { background: var(--line); }
+  .cols .c em { position: absolute; top: -2px; font-style: normal; font-size: 11px; color: var(--ink); font-variant-numeric: tabular-nums; transform: translateY(-100%); }
+  .cols .c:hover i { filter: brightness(.85); }
+  .xlab { display: flex; gap: 4px; margin-top: 4px; }
+  .xlab span { flex: 1; text-align: center; font-size: 10px; color: var(--muted); overflow: hidden; white-space: nowrap; }
+  .hbars { display: grid; gap: 7px; }
+  .hb { display: grid; grid-template-columns: minmax(90px, 38%) 1fr auto; gap: 8px; align-items: center; font-size: 12.5px; }
+  .hb .lb { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hb .tr { height: 12px; background: #f0ebe2; border-radius: 3px; overflow: hidden; }
+  .hb .tr i { display: block; height: 100%; background: var(--brass); border-radius: 3px; }
+  .hb .tr i.ok { background: var(--ok); } .hb .tr i.warn { background: var(--warn); } .hb .tr i.bad { background: var(--bad); }
+  .hb .v { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+  .hb .v b { color: var(--ink); font-weight: 600; }
+  .stale { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .stale li { display: flex; gap: 10px; align-items: center; font-size: 13px; cursor: pointer; padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px; }
+  .stale li:hover { border-color: var(--brass); }
+  .stale li time { margin-left: auto; color: var(--bad); font-size: 12px; white-space: nowrap; }
+  .none { color: var(--muted); font-size: 12px; }
+  @media (max-width: 760px) { .panel { grid-column: 1 / -1; } }
   .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 4px; font-size: 13px; z-index: 20; box-shadow: var(--shadow); }
   .toast.err { background: var(--bad); }
   button:focus-visible, a:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
@@ -91,6 +132,10 @@
 <body>
 <header>
   <div class="name">BRAVVO <small>CRM · CAMPANHA META</small></div>
+  <div class="tabs" role="tablist">
+    <button id="tabFunil" class="on" role="tab" aria-selected="true" onclick="showTab('funil')">Funil</button>
+    <button id="tabPainel" role="tab" aria-selected="false" onclick="showTab('painel')">Painel</button>
+  </div>
   <div class="sp"></div>
   <input id="q" type="search" placeholder="Buscar nome, WhatsApp, serviço…" aria-label="Buscar leads">
   <span class="sync" id="sync">carregando…</span>
@@ -98,6 +143,37 @@
 
 <section class="stats" id="stats" aria-label="Resumo do funil"></section>
 <main class="board" id="board" aria-label="Funil de leads"></main>
+
+<section class="dash" id="dash" aria-label="Painel da campanha">
+  <div class="bar-controls">
+    <label>Período
+      <select id="dPeriodo" onchange="renderDash()">
+        <option value="7">Últimos 7 dias</option>
+        <option value="14" selected>Últimos 14 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="0">Tudo</option>
+      </select>
+    </label>
+    <label>Gasto no período (R$)
+      <input id="dGasto" type="text" inputmode="decimal" placeholder="ex.: 350" size="8" oninput="saveGasto()">
+    </label>
+    <span class="none" id="dResumo"></span>
+  </div>
+  <div class="tiles" id="dTiles"></div>
+
+  <div class="panel wide"><h3>Leads por dia</h3><p class="q">A campanha está trazendo gente?</p><div id="dDias"></div></div>
+
+  <div class="panel"><h3>Por anúncio</h3><p class="q">Qual criativo traz lead e qual traz cliente. Barra = leads, número à direita = ganhos.</p><div class="hbars" id="dAnuncio"></div></div>
+  <div class="panel"><h3>Urgência</h3><p class="q">Quem quer vir agora e quem só está pesquisando.</p><div class="hbars" id="dQuando"></div></div>
+
+  <div class="panel"><h3>Serviço pedido</h3><p class="q">Assinatura versus avulso.</p><div class="hbars" id="dServico"></div></div>
+  <div class="panel"><h3>Setores</h3><p class="q">De onde vem a demanda. Confere com o raio de 4 km.</p><div class="hbars" id="dSetor"></div></div>
+
+  <div class="panel"><h3>Funil</h3><p class="q">Quantos chegaram em cada etapa. Onde a equipe perde gente.</p><div class="hbars" id="dFunil"></div></div>
+  <div class="panel"><h3>Motivos de perda</h3><p class="q">"Não respondeu" alto é velocidade. "Achou caro" alto é público.</p><div class="hbars" id="dPerda"></div></div>
+
+  <div class="panel wide"><h3>Leads parados</h3><p class="q">Em "Novo lead" há mais de 24 horas. Clique para abrir e chamar.</p><ul class="stale" id="dParados"></ul></div>
+</section>
 
 <div id="drawerRoot"></div>
 <div id="toastRoot"></div>
@@ -130,6 +206,7 @@ async function load() {
     if (!CFG.stages.length) CFG = await api('GET', 'api/funil');
     LEADS = await api('GET', 'api/leads');
     render();
+    if (TAB === 'painel') renderDash();
     $('#sync').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     if (OPEN) { const l = LEADS.find((x) => x.id === OPEN); if (l) renderDrawer(l); }
   } catch (e) { $('#sync').textContent = 'erro ao carregar'; toast(e.message, true); }
@@ -268,8 +345,75 @@ async function del(id) {
   catch (e) { toast(e.message, true); }
 }
 
+// ---------- Painel ----------
+let TAB = 'funil';
+function showTab(t) {
+  TAB = t;
+  $('#board').style.display = t === 'funil' ? '' : 'none';
+  $('#stats').style.display = t === 'funil' ? '' : 'none';
+  $('#dash').classList.toggle('on', t === 'painel');
+  $('#tabFunil').classList.toggle('on', t === 'funil'); $('#tabFunil').setAttribute('aria-selected', t === 'funil');
+  $('#tabPainel').classList.toggle('on', t === 'painel'); $('#tabPainel').setAttribute('aria-selected', t === 'painel');
+  try { localStorage.setItem('bravvo_tab', t); } catch (e) {}
+  if (t === 'painel') renderDash();
+}
+function saveGasto() { try { localStorage.setItem('bravvo_gasto_' + $('#dPeriodo').value, $('#dGasto').value); } catch (e) {} renderDash(true); }
+const dayKey = (iso) => { const d = new Date(iso); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const firstContactMs = (l) => { const e = (l.events || []).find((x) => (x.type === 'stage' && x.to_stage !== 'novo') || x.type === 'note'); return e ? new Date(e.at) - new Date(l.created_at) : null; };
+const fmtDur = (ms) => { const h = ms / 36e5; if (h < 1) return `${Math.round(ms / 6e4)} min`; if (h < 48) return `${h.toFixed(1).replace('.0', '')} h`; return `${Math.round(h / 24)} d`; };
+const count = (arr, fn) => { const m = new Map(); for (const x of arr) { const k = fn(x); if (k == null || k === '') continue; m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); };
+function hbars(el, rows, opts = {}) {
+  if (!rows.length) { el.innerHTML = '<div class="none">sem dados no período</div>'; return; }
+  const max = Math.max(...rows.map((r) => r.v)) || 1;
+  el.innerHTML = rows.map((r) => `<div class="hb"><div class="lb" title="${esc(r.k)}">${esc(r.k)}</div><div class="tr"><i class="${r.cls || ''}" style="width:${Math.max(2, 100 * r.v / max)}%"></i></div><div class="v">${r.extra != null ? `<b>${r.extra}</b> · ` : ''}${r.v}${opts.pct ? ` <span>(${Math.round(100 * r.v / (opts.total || 1))}%)</span>` : ''}</div></div>`).join('');
+}
+function renderDash(keepGasto) {
+  if (!keepGasto) { try { $('#dGasto').value = localStorage.getItem('bravvo_gasto_' + $('#dPeriodo').value) || ''; } catch (e) {} }
+  const dias = Number($('#dPeriodo').value);
+  const since = dias ? Date.now() - dias * 864e5 : 0;
+  const L = LEADS.filter((l) => new Date(l.created_at) >= since);
+  const total = L.length;
+  const ganhos = L.filter((l) => l.stage === 'ganho');
+  const receita = ganhos.reduce((a, l) => a + Number(l.valor || 0), 0);
+  const gasto = Number(($('#dGasto').value || '').replace(/\./g, '').replace(',', '.')) || 0;
+  const parados = LEADS.filter((l) => l.stage === 'novo' && Date.now() - new Date(l.created_at) > 864e5).sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const contatos = L.map(firstContactMs).filter((x) => x != null);
+  const medContato = contatos.length ? contatos.reduce((a, b) => a + b, 0) / contatos.length : null;
+  $('#dResumo').textContent = `${total} lead${total === 1 ? '' : 's'} no período`;
+  $('#dTiles').innerHTML = [
+    ['Leads', total, dias ? `${(total / dias).toFixed(1)} por dia` : ''],
+    ['Custo por lead', gasto && total ? brl(gasto / total) : '–', gasto ? `gasto ${brl(gasto)}` : 'informe o gasto'],
+    ['Taxa de ganho', total ? `${Math.round(100 * ganhos.length / total)}%` : '–', `${ganhos.length} ganho${ganhos.length === 1 ? '' : 's'}`],
+    ['Custo por cliente', gasto && ganhos.length ? brl(gasto / ganhos.length) : '–', ''],
+    ['Receita', brl(receita), ganhos.length ? `ticket ${brl(receita / ganhos.length)}` : ''],
+    ['1º contato', medContato != null ? fmtDur(medContato) : '–', 'tempo médio'],
+    ['Parados +24h', parados.length, 'ainda em Novo', parados.length ? 'alert' : ''],
+  ].map(([k, v, sub, cls]) => `<div class="tile ${cls || ''}"><span>${k}</span><b>${v}</b><small>${sub || '&nbsp;'}</small></div>`).join('');
+
+  // leads por dia
+  const nDias = dias || Math.max(7, Math.ceil((Date.now() - Math.min(...LEADS.map((l) => +new Date(l.created_at)), Date.now())) / 864e5) + 1);
+  const porDia = new Map(); for (const l of L) { const k = dayKey(l.created_at); porDia.set(k, (porDia.get(k) || 0) + 1); }
+  const days = []; for (let i = nDias - 1; i >= 0; i--) { const d = new Date(Date.now() - i * 864e5); days.push({ k: dayKey(d), lb: `${d.getDate()}/${d.getMonth() + 1}`, v: porDia.get(dayKey(d)) || 0 }); }
+  const maxD = Math.max(...days.map((d) => d.v), 1);
+  $('#dDias').innerHTML = `<div class="cols">${days.map((d) => `<div class="c" title="${d.lb}: ${d.v}"><em>${d.v || ''}</em><i class="${d.v ? '' : 'zero'}" style="height:${Math.max(2, 100 * d.v / maxD)}%"></i></div>`).join('')}</div><div class="xlab">${days.map((d, i) => `<span>${(nDias <= 14 || i % Math.ceil(nDias / 14) === 0) ? d.lb : ''}</span>`).join('')}</div>`;
+
+  // por anúncio: leads e ganhos
+  const anun = count(L, (l) => l.utm_content || l.utm_campaign || l.utm_source || 'sem origem');
+  hbars($('#dAnuncio'), anun.map(([k, v]) => ({ k, v, extra: L.filter((l) => (l.utm_content || l.utm_campaign || l.utm_source || 'sem origem') === k && l.stage === 'ganho').length + ' ganho(s)' })));
+  hbars($('#dQuando'), count(L, (l) => l.quando || 'não informado').map(([k, v]) => ({ k, v, cls: /essa semana/i.test(k) ? 'ok' : /pesquisando/i.test(k) ? 'bad' : 'warn' })), { pct: true, total });
+  hbars($('#dServico'), count(L, (l) => l.servico || 'não informado').map(([k, v]) => ({ k, v })), { pct: true, total });
+  hbars($('#dSetor'), count(L, (l) => (l.setor || '').trim().toLowerCase().replace(/^setor\s+/, '').replace(/(^|\s)\S/g, (c) => c.toUpperCase()) || 'não informado').slice(0, 8).map(([k, v]) => ({ k, v })));
+  // funil: quantos passaram por cada etapa (etapa atual ou histórico)
+  const ORDER = ['novo', 'contato', 'agendado', 'compareceu', 'ganho'];
+  const maxIdx = (l) => Math.max(ORDER.indexOf(l.stage), ...(l.events || []).filter((e) => e.type === 'stage').map((e) => ORDER.indexOf(e.to_stage)));
+  hbars($('#dFunil'), ORDER.map((st, i) => ({ k: CFG.labels[st] || st, v: L.filter((l) => maxIdx(l) >= i).length, cls: st === 'ganho' ? 'ok' : '' })));
+  hbars($('#dPerda'), count(L.filter((l) => l.stage === 'perdido'), (l) => l.lost_reason || 'sem motivo').map(([k, v]) => ({ k, v, cls: 'bad' })), { pct: true, total: L.filter((l) => l.stage === 'perdido').length });
+  $('#dParados').innerHTML = parados.length ? parados.map((l) => `<li onclick="openDrawer('${l.id}')"><b>${esc(l.nome)}</b><span class="none">${esc(l.servico || '')}${l.quando ? ' · ' + esc(l.quando) : ''}</span><time>há ${ago(l.created_at)}</time></li>`).join('') : '<li class="none" style="border:0;cursor:default">nenhum lead parado</li>';
+}
+
 $('#q').addEventListener('input', render);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+try { if (localStorage.getItem('bravvo_tab') === 'painel') showTab('painel'); } catch (e) {}
 load();
 TIMER = setInterval(() => { if (!document.hidden) load(); }, 20000);
 </script>
